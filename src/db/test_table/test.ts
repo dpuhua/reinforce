@@ -5,10 +5,10 @@ import { Table, Column } from 'sequelize-typescript'
 import baseTable from '../base_table/base_table'
 
 @Table({
-  tableName: 'user'
+  tableName: 'test'
 })
-export default class User extends baseTable {
-  static async getByMobile<T extends User>(mobile: string) {
+export default class Test extends baseTable {
+  static async getByMobile<T extends Test>(mobile: string) {
     const item = await this.findOne({
       where: {
         mobile
@@ -17,7 +17,7 @@ export default class User extends baseTable {
     return item as T
   }
 
-  static async getByuserName<T extends User>(userName: string) {
+  static async getByuserName<T extends Test>(userName: string) {
     const item = await this.findOne({
       where: {
         userName

@@ -14,17 +14,17 @@ export default class BaseTable extends Model<BaseTable> {
   }
 
   // 删除
-  static async deleteById(rid: number) {
+  static async deleteById(id: number) {
     return await this.destroy({
       where: {
-        rid
+        id
       }
     })
   }
 
   // 更新
-  static async updateItemById(item: any, rid: number) {
-    const data = await this.update(item, { where: { rid } })
+  static async updateItemById(item: any, id: number) {
+    const data = await this.update(item, { where: { id } })
     return data
   }
 
@@ -34,12 +34,12 @@ export default class BaseTable extends Model<BaseTable> {
     return items as T[];
   }
 
-  // 通过rid查询
-  static async getById<T extends BaseTable>(rid: number) {
+  // 通过id查询
+  static async getById<T extends BaseTable>(id: number) {
     const item = await this.findOne({
       raw: true,
       where: {
-        rid
+        id
       }
     })
     return item as T
@@ -53,11 +53,19 @@ export default class BaseTable extends Model<BaseTable> {
     return item as T
   }
 
+  // 建表, force为true时会先删除再创建
+  static async asyncTable<T extends BaseTable>() {
+    const item = await this.sync({
+      force: false
+    })
+    return item as T
+  }
+
   @Column({
     primaryKey: true,
     autoIncrement: true
   })
-  rid!: number
+  id!: number
 
   // 字符串索引
   [index: string]: any

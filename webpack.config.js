@@ -1,6 +1,8 @@
+const path = require('path')
 const nodeExternal = require('webpack-node-externals')
 const UglifyESWebpackPlugin = require('uglify-es-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
 module.exports = {
   // 表明node环境
   target: 'node',
@@ -11,7 +13,10 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['.js', 'json', '.ts', '.tsx']
+    extensions: ['.js', 'json', '.ts', '.tsx'],
+    alias: {
+      '~': path.resolve(__dirname, 'src')
+    }
   },
   mode: 'none',
   externals: [
@@ -30,10 +35,6 @@ module.exports = {
         use: {
           loader: 'ts-loader'
         }
-      },
-      {
-        test: /\.pug$/,
-        use: ['raw-loader', 'pug-html-loader']
       }
     ]
   }

@@ -1,4 +1,5 @@
-import { sequelize, user } from '../../db/test'
+import sequelize from '../../db/test'
+import user from '../../db/test_table/user'
 import jwt from 'jwt-simple'
 import tokenConfig from '../../config/token'
 import Valid from '../../tools/valid'
@@ -17,7 +18,7 @@ export default class UserController {
     if (req.userName && req.mobile && req.password) {
       try {
         const ret = await user.createItem(req)
-        const data = await user.getById(ret.rid)
+        const data = await user.getById(ret.id)
         ctx.body = {
           code: 1,
           msg: '创建成功',
@@ -158,7 +159,7 @@ export default class UserController {
           if (data.password === req.password) {
             const token = getToken(data.userName)
             const Data = {
-              id: data.rid,
+              id: data.id,
               userName: data.userName,
               mobile: data.mobile
             }
@@ -196,6 +197,7 @@ export default class UserController {
     }
   }
   static async forget(ctx: any) { // 忘记密码
+    console.log(1111111111111111111);
     const req = ctx.request.body
     if (req.userName && req.mobile && req.password) {
       try {
@@ -206,7 +208,7 @@ export default class UserController {
               userName: req.userName,
               mobile: req.mobile,
               password: req.password
-            }, data.rid)
+            }, data.id)
             if (upData) {
               ctx.body = {
                 code: 1,
