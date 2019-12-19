@@ -2,6 +2,7 @@ const path = require('path')
 const nodeExternal = require('webpack-node-externals')
 const UglifyESWebpackPlugin = require('uglify-es-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
   // 表明node环境
@@ -25,7 +26,10 @@ module.exports = {
   ],
   plugins: [
     new UglifyESWebpackPlugin(),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': require('./build/env.config')
+    })
   ],
   module: {
     unknownContextCritical: false,
