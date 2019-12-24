@@ -30,8 +30,8 @@ export default class BaseTable extends Model<BaseTable> {
 
   // 查询所有
   static async getList<T extends BaseTable>() {
-    const items = await this.findAll({raw: true});
-    return items as T[];
+    const items = await this.findAll({raw: true})
+    return items as T[]
   }
 
   // 通过id查询

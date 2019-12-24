@@ -6,8 +6,8 @@
     "jsRules": {},
     "rules": {
         "semicolon": [
-            false,
-            "always"
+            true,
+            "never"
         ],
         "quotemark":[
             true, 
