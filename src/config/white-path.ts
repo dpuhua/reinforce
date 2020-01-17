@@ -7,4 +7,4 @@ const whitePaths: string[] = [
   '/graphql'
 ]
 
-export default new RegExp(`^${whitePaths.map((item) => `(${item})`).join('|')}`)
+export default new RegExp(`^${whitePaths.map((item) => `(${item})`).join('|') || '$'}`)

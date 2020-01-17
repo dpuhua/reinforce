@@ -6,10 +6,10 @@ import bodyparser from 'koa-bodyparser' // 处理post请求
 import logger from 'koa-logger' // 输出请求日志，此处只是在控制台打印的
 import cors from 'koa2-cors' // 跨域设置
 import koaJwt from 'koa-jwt' // Json Web Tokens 用于token认证
-import jwt from 'jwt-simple' // 用于操作jwt产生的token，列如间token中的信息提取
+import jwt from 'jwt-simple' // 用于操作jwt产生的token，列如将token中的信息提取
 import koaStatic from 'koa-static' // 加载本地文件
 
-import { ApolloServer, gql } from 'apollo-server-koa'
+import { ApolloServer } from 'apollo-server-koa'
 
 import sequelize from '~/db/test' // test数据库
 import * as models from '~/db/test_table' // 模型，test数据库下的表
@@ -21,11 +21,18 @@ import tokenConfig from './config/token' // token配置
 import ipConfig from '~/config/ipconfig' // 获取本地ip
 import whitePath from '~/config/white-path' // 获取白名单配置
 
+import typeDefs from '~/graphql/schema' // schema
+import schemaDirectives from '~/graphql/directive' // graphql自定义指令，目前还只用于权限管理
+import resolvers from '~/graphql/resolvers' // graphql resolvers
+
 // sequelize添加模型
 sequelize.addModels(Object.values(models))
 
 // middlewares
-app.use(cors()) // 此处跨域有问题，应该传入参数，不应该在下面直接设置响应头
+app.use(cors({
+  origin: '*'
+}))
+
 app.use(bodyparser({
   enableTypes: ['json', 'form', 'text']
 }))
@@ -36,10 +43,8 @@ app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
 
+// 处理404 和token报错
 app.use(async (ctx, next) => {
-  // origin
-  ctx.set('Access-Control-Allow-Origin', '*')
-  ctx.set('Access-Control-Allow-Credentials', 'true')
   await next().then( () => {
     if (ctx.status === 404) {
       ctx.body = {
@@ -62,12 +67,12 @@ app.use(async (ctx, next) => {
   })
 })
 
-// valid
+// 校验token，放行白名单
 app.use(koaJwt({secret: tokenConfig.secret}).unless({
   path: [whitePath]
 }))
 
-// valid token
+// token时间失效有效期校验
 app.use(async (ctx, next) => {
   if (!whitePath.test(ctx.url)) {
     const deToken = jwt.decode(ctx.request.header.authorization.replace('Bearer ', ''), tokenConfig.secret)
@@ -85,7 +90,7 @@ app.use(async (ctx, next) => {
   }
 })
 
-// routes
+// restful routes
 Object.values(routers).forEach((route) => {
   app.use(route.routes())
 })
@@ -95,20 +100,15 @@ app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 })
 
-// graphql
-const typeDefs = gql`
-  type todo {
-    _id: ID!
-    content: String!
-    completed: Boolean!
-  }
-  type Query {
-    todoList: [todo]!
-  }
-`
 const server = new ApolloServer({
   typeDefs,
-  mocks: true
+  resolvers,
+  schemaDirectives,
+  context: ({ ctx }) => {
+    return {
+      authScope: ctx.req.headers.authorization
+    }
+  }
 })
 
 server.applyMiddleware({ app })
@@ -118,8 +118,8 @@ server.applyMiddleware({ app })
  */
 app.listen(process.env.port, () => {
   setTimeout(() => {
-    console.log(`resful server start: ${chalk.cyan(`http://${ipConfig.ip}:${process.env.port}`)}`)
-    console.log(`resful server start: ${chalk.cyan(`http://localhost:${process.env.port}`)}`)
+    console.log(`restful server start: ${chalk.cyan(`http://${ipConfig.ip}:${process.env.port}`)}`)
+    console.log(`restful server start: ${chalk.cyan(`http://localhost:${process.env.port}`)}`)
     console.log(`graphql server ready: ${chalk.cyan(`http://${ipConfig.ip}:${process.env.port + server.graphqlPath}`)}`)
   }, 1000)
 })
