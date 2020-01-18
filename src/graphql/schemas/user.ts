@@ -1,7 +1,9 @@
 // user schema
-export default `
+import { gql } from 'apollo-server-koa'
+
+export default gql`
   type todo {
-    _id: ID!
+    id: ID!
     content: String!
     completed: Boolean!
   }

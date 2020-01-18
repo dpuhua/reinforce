@@ -21,9 +21,8 @@ import tokenConfig from './config/token' // token配置
 import ipConfig from '~/config/ipconfig' // 获取本地ip
 import whitePath from '~/config/white-path' // 获取白名单配置
 
-import typeDefs from '~/graphql/schema' // schema
+import schemaModules from '~/graphql/modules' // schema modules
 import schemaDirectives from '~/graphql/directive' // graphql自定义指令，目前还只用于权限管理
-import resolvers from '~/graphql/resolvers' // graphql resolvers
 
 // sequelize添加模型
 sequelize.addModels(Object.values(models))
@@ -101,8 +100,7 @@ app.on('error', (err, ctx) => {
 })
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  modules: schemaModules,
   schemaDirectives,
   context: ({ ctx }) => {
     return {

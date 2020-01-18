@@ -1,8 +1,14 @@
 # reinforce
-## koa + sequelize + mysql + typescript
+## restFul koa + sequelize + mysql + typescript
+### restFul目前没有api文档
+
+## graphql apollo-graphql-koa + typescript
+### 接口文档与接口获取地址一致 /graphql
+
 #### 目前没有区分开发和生产环境
 #### 
 #### 启动开发环境 npm run dev
+#### 
 #### 
 #### 生产环境
 #### --| 1、docker：Dockerfile配置
@@ -22,5 +28,6 @@
 ##### |---|--public                       公共资源目录
 ##### |---|--routes                       路由目录
 ##### |---|--views                        中间页面层
+##### |---|--graphql                      graphql相关
 ##### |--dist                             打包文件
 ##### |--bin                              启动文件

@@ -8,10 +8,19 @@ export default {
       console.log(33333333333333333)
 
       return [{
-        _id: 'abbbbb',
+        id: 'abbbbb',
         content: 'test1',
         completed: false
       }]
+    }
+  },
+  Mutation: {
+    updateUser(root: any, args: any) {
+      console.log(args)
+      return {
+        id: '1231',
+        content: 'aaa'
+      }
     }
   }
 }
