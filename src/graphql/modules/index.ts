@@ -1,17 +1,19 @@
 // query
-import query from '~/graphql/schemas/common/query'
+import query from '~/graphql/modules/schemas/common/query'
 
 // mutation
-import mutation from '~/graphql/schemas/common/mutation'
+import mutation from '~/graphql/modules/schemas/common/mutation'
+
+// directive主要用于鉴权
+import directive from '~/graphql/modules/schemas/common/directive'
 
 // typeDefs
-import directive from '~/graphql/schemas/common/directive'
-import user from '~/graphql/schemas/user'
-import test from '~/graphql/schemas/test'
+import user from '~/graphql/modules/schemas/user'
+import test from '~/graphql/modules/schemas/test'
 
 // resolvers
-import userResolvers from '~/graphql/resolvers/user'
-import testResolvers from '~/graphql/resolvers/test'
+import userResolvers from '~/graphql/modules/resolvers/user'
+import testResolvers from '~/graphql/modules/resolvers/test'
 
 const modules = [
   { typeDefs: query },
